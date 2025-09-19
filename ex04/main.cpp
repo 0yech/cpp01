@@ -6,7 +6,7 @@
 /*   By: nrey <nrey@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 01:43:53 by nrey              #+#    #+#             */
-/*   Updated: 2025/05/27 02:08:00 by nrey             ###   ########.fr       */
+/*   Updated: 2025/09/19 10:34:40 by nrey             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,38 +14,21 @@
 #include <string>
 #include <fstream>
 
-bool	isMatch(const std::string &line, size_t pos, const std::string &s1)
-{
-	for (size_t i = 0; i < s1.length(); ++i)
-	{
-		if (pos + i >= line.length() || line[pos + i] != s1[i])
-			return (false);
-	}
-	return (true);
-}
-
 void	replace42(std::ifstream &inFile, std::ofstream &outFile, 
 					const std::string &s1, const std::string &s2)
 {
 	std::string line;
 	while (std::getline(inFile, line))
 	{
-		std::string newLine;
-		size_t i = 0;
-		while (i < line.length())
+		size_t pos = 0;
+
+		while ((pos = line.find(s1, pos)) != std::string::npos)
 		{
-			if (isMatch(line, i, s1))
-			{
-				newLine += s2;
-				i += s1.length();
-			}
-			else
-			{
-				newLine += line[i];
-				i++;
-			}
+			line.erase(pos, s1.length());
+			line.insert(pos, s2);
+			pos += s2.length();
 		}
-		outFile << newLine << std::endl;
+		outFile << line << std::endl;
 	}
 }
 
